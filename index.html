@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="lt" id="__root">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foxywedding test case</title>
+    <meta property="og:title" content="Test case">
+    <meta name="author" content="Ivan Guzenko">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.2.3/angular-material.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+<div layout="column" class="root-container" ng-app="testcase" ng-cloak ng-controller="MainController as ctrl">
+    <md-content layout="column" flex>
+        <md-toolbar class="main-toolbar" flex="initial" layout="row" layout-align="center center" >
+            <div>
+                <md-icon class="formicon" md-font-set="material-icons">contact_mail</md-icon>
+                <span>Foxywedding test case</span>
+                <span flex=""></span>
+            </div>
+        </md-toolbar>
+        <md-content layout="column" flex="100" >
+            <form name="userdataForm" layout-margin>
+                <!-- Main user data inputs -->
+                
+                <fieldset class="md-whiteframe-9dp">
+                    <legend>Vartotojas</legend>
+                    <md-content layout="row" layout-wrap>
+                        <md-input-container>
+                            <md-icon md-font-set="material-icons">person</md-icon>
+                            <input placeholder="Vardas" ng-required="true" aria-label="name" ng-model="userdata.name" name="name" type="text">
+                            <div ng-messages="userdataForm.name.$error">
+                                <div ng-message="required">Reikšmė lauke turi būti nurodyta</div>
+                                <div ng-message="email">Klaidingai įvestas el. pašto adresas</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container>
+                            <md-icon md-font-set="material-icons">email</md-icon>
+                            <input placeholder="El. paštas" ng-required="true" aria-label="email" ng-model="userdata.email" name="email" type="email" check-uniq>
+                            <div ng-messages="userdataForm.email.$error">
+                                <div ng-message="required">Reikšmė lauke turi būti nurodyta</div>
+                                <div ng-message="email">Klaidingai įvestas el. pašto adresas</div>
+                                <div ng-message="unique">El. pašto adresas jau yra naudojamas</div>
+                            </div>
+                        </md-input-container>
+                    </md-content>
+                    <md-content layout="row" layout-wrap>
+                        <md-input-container>
+                            <md-icon md-font-set="material-icons">key</md-icon>
+                            <input placeholder="Slaptažodis" ng-required="true" aria-label="password" ng-model="userdata.password" name="password" type="password">
+                            <div ng-messages="userdataForm.password.$error">
+                                <div ng-message="required">Reikšmė lauke turi būti nurodyta</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container>
+                            <md-icon md-font-set="material-icons">key</md-icon>
+                            <input placeholder="Slaptažodis (pakart.)" ng-required="true" aria-label="retry password" ng-model="userdata.retryPassword" name="retryPassword" type="password" check-equals="{{userdata.password}}">
+                            <div ng-messages="userdataForm.retryPassword.$error">
+                                <div ng-message="required">Reikšmė lauke turi būti nurodyta</div>
+                                <div ng-message="equals">Slaptažodžiai turi sutapti</div>
+                            </div>
+                        </md-input-container>
+                    </md-content>
+                </fieldset>
+
+                <!-- Friend data inputs -->
+                <fieldset class="md-whiteframe-9dp">
+                    <legend>Draugai</legend>
+                    <md-list>
+                        <md-list-item ng-repeat="friend in userdata.friends">
+                            <ng-form name="friendData">
+                                <md-content layout="row" layout-wrap>
+                                    <md-input-container>
+                                        <md-icon md-font-set="material-icons">person</md-icon>
+                                        <input placeholder="Vardas" ng-required="true" aria-label="name" ng-model="friend.name" name="name" type="text">
+                                        <div ng-messages="friendData.name.$error">
+                                            <div ng-message="required">Reikšmė lauke turi būti nurodyta</div>
+                                            <div ng-message="email">Klaidingai įvestas el. pašto adresas</div>
+                                        </div>
+                                    </md-input-container>
+                                    <md-input-container>
+                                        <md-icon md-font-set="material-icons">email</md-icon>
+                                        <input placeholder="El. paštas" ng-required="true" aria-label="email" ng-model="friend.email" name="email" type="email">
+                                        <div ng-messages="friendData.email.$error">
+                                            <div ng-message="required">Reikšmė lauke turi būti nurodyta</div>
+                                            <div ng-message="email">Klaidingai įvestas el. pašto adresas</div>
+                                        </div>
+                                    </md-input-container>
+                                </md-content>
+                            </ng-form>
+                            <md-button ng-if="userdata.friends.length>1" class="md-secondary md-icon-button" ng-click="userdata.friends.splice($index, 1)" aria-label="remove friend">
+                                <md-icon md-font-set="material-icons">delete</md-icon>
+                            </md-button>
+                        </md-list-item>
+                        <md-divider></md-divider>
+                        <md-subheader class="md-no-sticky" >
+                            <md-button class="md-raised md-primary" ng-click="userdata.friends.push({})" aria-label="add friend">
+                                <md-icon class="formicon" md-font-set="material-icons">person_add</md-icon>
+                                Pridėti draugą
+                            </md-button>
+                        </md-subheader>
+                    </md-list>
+                </fieldset>
+            </form>
+        </md-content>
+        
+        <!-- Commit button -->
+        <md-content flex="none" layout="column" layout-margin >
+            <md-button ng-click="msg.show('successMsg')" ng-disabled="userdataForm.$invalid" class="md-raised md-primary" aria-label="next">
+                <md-icon class="formicon" md-font-set="material-icons">navigate_next</md-icon>
+                Testi
+            </md-button>
+        </md-content>
+        <div class="hidden">
+         <div class="md-dialog-container" id="successMsg">            
+          <md-dialog>
+            <md-dialog-content layout-margin>
+              <h2 class="md-title"><md-icon class="formicon" md-font-set="material-icons">info</md-icon>Informacija</h2>
+              <div><p>Informacija sekmingai paruošta.</p><p>Gautas turinys:</p><code>{{userdata}}</code></div>
+            </md-dialog-content>
+            <md-dialog-actions>
+             <md-button ng-click="msg.close()" class="md-primary"> <md-icon class="formicon" md-font-set="material-icons">done</md-icon> Gerai</md-button>
+            </md-dialog-actions>              
+        </md-dialog>
+        </div>             
+        </div>            
+    </md-content>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-animate.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-aria.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-messages.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.2.3/angular-material.min.js"></script>
+<script src="js/main_controller.js"></script>
+</body>
+</html>
